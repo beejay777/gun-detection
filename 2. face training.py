@@ -24,11 +24,16 @@ gun_detector = cv2.CascadeClassifier("cascade.xml");
 face_detector = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 
 # function to get the images and label data
-def getImagesAndLabels(path):
+def getImagesAndLabels(path, x):
 
-    imagePaths = [os.path.join(path,f) for f in os.listdir(path)]     
+    imagePaths = [os.path.join(path,f) for f in os.listdir(path)]
     faceSamples=[]
     ids = []
+
+    if x=='f':
+        detector = face_detector
+    elif x == 'g':
+        detector = gun_detector
 
     for imagePath in imagePaths:
 
@@ -45,11 +50,18 @@ def getImagesAndLabels(path):
     return faceSamples,ids
 
 print ("\n [INFO] Training faces. It will take a few seconds. Wait ...")
-faces,ids = getImagesAndLabels(path)
+faces,ids = getImagesAndLabels(face_path, 'f')
 recognizer.train(faces, np.array(ids))
 
 # Save the model into trainer/trainer.yml
-recognizer.write('trainer/trainer.yml') # recognizer.save() worked on Mac, but not on Pi
+recognizer.write('trainer/facetrainer.yml') # recognizer.save() worked on Mac, but not on Pi
+
+print ("\n [INFO] Training guns. It will take a few seconds. Wait ...")
+faces,ids = getImagesAndLabels(gun_path, 'g')
+recognizer.train(faces, np.array(ids))
+
+# Save the model into trainer/trainer.yml
+recognizer.write('trainer/guntrainer.yml') # recognizer.save() worked on Mac, but not on Pi
 
 # Print the numer of faces trained and end program
 print("\n [INFO] {0} faces trained. Exiting Program".format(len(np.unique(ids))))
