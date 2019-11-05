@@ -16,10 +16,12 @@ from PIL import Image #pillow package
 import os
 
 # Path for face image database
-path = 'dataset'
+face_path = 'dataset/Users'
+gun_path = 'dataset/Guns'
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
-detector = cv2.CascadeClassifier("cascade.xml");
+gun_detector = cv2.CascadeClassifier("cascade.xml");
+face_detector = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 
 # function to get the images and label data
 def getImagesAndLabels(path):
